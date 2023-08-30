@@ -3,7 +3,7 @@ drop table if exists account;
 create table account (
     account_id int primary key auto_increment,
     username varchar(255) unique,
-    password varchar(255)
+    password varchar(255)  
 );
 create table message (
     message_id int primary key auto_increment,
