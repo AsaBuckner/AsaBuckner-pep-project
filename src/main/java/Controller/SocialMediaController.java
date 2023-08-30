@@ -17,7 +17,7 @@ public class SocialMediaController {
     
     public SocialMediaController(DAOImpl DAO) {
         this.DAO = DAO;
-    }
+     } 
 
 
     public Javalin startAPI() {
