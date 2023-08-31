@@ -13,12 +13,8 @@ import io.javalin.http.Context;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
-    private DAOImpl DAO; // You need to declare and initialize this
-    
-    public SocialMediaController(DAOImpl DAO) {
-        this.DAO = DAO;
-     } 
 
+    DAOImpl DAO = new DAOImpl();
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
@@ -39,11 +35,11 @@ public class SocialMediaController {
         Account newAccount = context.bodyAsClass(Account.class);
 
         if (newAccount.getUsername().isEmpty() || newAccount.getPassword().length() < 4) {
-            context.status(400).result("Invalid username or password.");
+            context.status(400).result();
             return;
         }
         if (DAO.accountExists(newAccount.getUsername()) == null) {
-            context.status(400).result("Client Error");
+            context.status(400).result();
             return;
         }
 
@@ -52,7 +48,7 @@ public class SocialMediaController {
         if (registeredAccount != null) {
             context.status(200).json(registeredAccount);
         } else {
-            context.status(400).result("An error occurred while registering the account.");
+            context.status(400).result();
         }
     }
 
@@ -60,7 +56,7 @@ public class SocialMediaController {
         Account credentials = context.bodyAsClass(Account.class);
 
         if (credentials.getUsername().isEmpty() || credentials.getPassword().length() < 4) {
-            context.status(400).result("Client Error");
+            context.status(400).result();
             return;
         }
         
@@ -69,7 +65,7 @@ public class SocialMediaController {
         if (userFound != null) {
             context.status(200).json(userFound);
         } else {
-            context.status(400).result("An error occurred while registering the account.");
+            context.status(400).result();
         }
     }
 
@@ -78,7 +74,7 @@ public class SocialMediaController {
     Message message = context.bodyAsClass(Message.class);
 
         if (message.getMessage_text().isEmpty() || message.getMessage_text().length() < 255 || DAO.accountExists(message.posted_by) == null) {
-            context.status(400).result("Client Error");
+            context.status(400).result();
             return;
         }
         
@@ -87,7 +83,7 @@ public class SocialMediaController {
         if (postedMessage != null) {
             context.status(200).json(postedMessage);
         } else {
-            context.status(400).result("Client Error");
+            context.status(400).result();
         }
     }
 
@@ -140,7 +136,7 @@ public class SocialMediaController {
         int id = Integer.parseInt(idStr);
 
         if (message.isEmpty() || message.length() < 255 || DAO.getMessageById(id) == null) {
-            context.status(400).result("Client Error");
+            context.status(400).result();
             return;
         }
         
@@ -149,7 +145,7 @@ public class SocialMediaController {
         if (updatedMessage != null) {
             context.status(200).json(updatedMessage);
         } else {
-            context.status(400).result("Client Error");
+            context.status(400).result();
         }
     } 
 
