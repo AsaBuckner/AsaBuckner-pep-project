@@ -218,7 +218,7 @@ public class DAOImpl implements DAO {
             e.printStackTrace();
         }
         
-        return foundAccount;
+        return null;
 
     }
 
@@ -246,7 +246,7 @@ public class DAOImpl implements DAO {
         } catch(SQLException e){
             e.printStackTrace();
         }
-            return foundAccount;
+            return null;
     }
 
 
@@ -291,8 +291,8 @@ public class DAOImpl implements DAO {
 
                 ResultSet rs = pr.executeQuery();
                 if(rs.next()){
-                    loggedIn.username = rs.getString(1);
-                    loggedIn.password = rs.getString(2);
+                    loggedIn.username = rs.getString(2);
+                    loggedIn.password = rs.getString(3);
                     loggedIn.account_id = rs.getInt(1);
                 }
                 return loggedIn;
@@ -300,7 +300,7 @@ public class DAOImpl implements DAO {
                 e.printStackTrace();
             }
         
-        return loggedIn;
+        return null;
         }
     }
 

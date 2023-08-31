@@ -55,7 +55,7 @@ public class SocialMediaController {
     private void loginHandler(Context context) {
         Account credentials = context.bodyAsClass(Account.class);
 
-        if (credentials.getUsername().isEmpty() || credentials.getPassword().length() < 4) {
+        if (credentials.getUsername().isEmpty() || credentials.getPassword().length() < 4 || DAO.accountExists(credentials.username) == null) {
             context.status(400).result();
             return;
         }
