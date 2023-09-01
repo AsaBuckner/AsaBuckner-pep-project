@@ -88,13 +88,14 @@ public class DAOImpl implements DAO {
                 m.posted_by = rs.getInt(2); 
                 m.message_text = rs.getString(3);
                 m.time_posted_epoch = rs.getLong(4);
+                return m;
             }
             } catch(SQLException e){
                 e.printStackTrace();
             }
 
 
-        return m;
+        return null;
     }
 
     @Override
