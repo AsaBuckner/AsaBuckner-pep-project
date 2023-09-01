@@ -102,7 +102,7 @@ public class SocialMediaController {
         int id = Integer.parseInt(idStr);
         Message message = DAO.getMessageById(id);
  
-        if(message.message_text != null){
+        if(message != null){
             context.status(200).json(message);
         }else{
             context.status(200).result();
