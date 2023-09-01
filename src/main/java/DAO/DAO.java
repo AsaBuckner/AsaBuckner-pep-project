@@ -10,14 +10,15 @@ public interface DAO {
 
     List<Message> getAllMesssage();
     List<Message> getMessageByUser(int posted_by);
+    Message getMessageByText(String message_text);
     Message getMessageById(int message_id);
-    public Message deleteMessageById(int message_id);
-    public Message updateMessageById(String message_text, int message_id);
-    public Message postNewMessage(Message m);
-    public Account accountExists(String username);
-    public Account accountExists(int posted_by);
-    public Account addAccount( Account account );
-    public Account Login( Account account );
+    Message deleteMessageById(int message_id);
+    Message updateMessageById(String message_text, int message_id);
+    Message postNewMessage(Message m);
+    Account accountExists(String username);
+    Account accountExists(int posted_by);
+    Account addAccount( Account account );
+    Account Login( Account account );
 
 
 

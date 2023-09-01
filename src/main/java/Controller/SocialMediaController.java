@@ -56,16 +56,17 @@ public class SocialMediaController {
         Account credentials = context.bodyAsClass(Account.class);
 
         if (credentials.getUsername().isEmpty() || credentials.getPassword().length() < 4 || DAO.accountExists(credentials.username) == null) {
-            context.status(400).result();
+            context.status(401).result();
             return;
         }
         
         Account userFound = DAO.Login(credentials);
 
-        if (userFound != null) {
+        if (userFound.username != null ) {
             context.status(200).json(userFound);
         } else {
-            context.status(400).result();
+            System.out.print(userFound);
+            context.status(401).result();
         }
     }
 
@@ -73,14 +74,15 @@ public class SocialMediaController {
     private void postMessageHandler(Context context) {
     Message message = context.bodyAsClass(Message.class);
 
-        if (message.getMessage_text().isEmpty() || message.getMessage_text().length() < 255 || DAO.accountExists(message.posted_by) == null) {
+        if (message.message_text.isEmpty() || message.message_text.length() > 255 || DAO.accountExists(message.posted_by) == null) {
             context.status(400).result();
             return;
         }
         
         Message postedMessage = DAO.postNewMessage(message);
 
-        if (postedMessage != null) {
+        System.out.println(DAO.accountExists(message.posted_by));
+        if (postedMessage.message_id != 0) {
             context.status(200).json(postedMessage);
         } else {
             context.status(400).result();
@@ -97,13 +99,15 @@ public class SocialMediaController {
 
     private void getMessagesByIDHandler(Context context) {
         String idStr = context.pathParam("message_id");
-        
         int id = Integer.parseInt(idStr);
-
         Message message = DAO.getMessageById(id);
-
-        context.status(200).json(message);
-
+ 
+        if(message.message_text != null){
+            context.status(200).json(message);
+        }else{
+            context.status(200).result();
+            return;
+        }    
     }
 
     private void deleteMessageHandler(Context context) {
@@ -112,8 +116,12 @@ public class SocialMediaController {
         int id = Integer.parseInt(idStr);
 
         Message message = DAO.deleteMessageById(id);
-
+        
+        if(message.message_text != null){
         context.status(200).json(message);
+        }else{
+        context.status(200).result();
+        }
 
     }
 
@@ -131,18 +139,19 @@ public class SocialMediaController {
     private void updateMessageHandler(Context context) {
         String idStr = context.pathParam("message_id");
     
-        String message = context.bodyAsClass(String.class);
+        Message message = context.bodyAsClass(Message.class);
 
         int id = Integer.parseInt(idStr);
 
-        if (message.isEmpty() || message.length() < 255 || DAO.getMessageById(id) == null) {
+        if (message.message_text.isEmpty() || message.message_text.length() > 255 || DAO.getMessageById(id) == null) {
             context.status(400).result();
             return;
         }
         
-        Message updatedMessage = DAO.updateMessageById(message, id);
+        Message updatedMessage = DAO.updateMessageById(message.message_text, id);
 
-        if (updatedMessage != null) {
+        System.out.print(updatedMessage);
+        if (updatedMessage.message_text == message.message_text) {
             context.status(200).json(updatedMessage);
         } else {
             context.status(400).result();

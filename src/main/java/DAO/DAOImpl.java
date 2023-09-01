@@ -97,11 +97,40 @@ public class DAOImpl implements DAO {
         return m;
     }
 
+    @Override
+    public Message getMessageByText(String message_text) {
+        
+        Message m = new Message();
+
+        try{
+            Connection conn = ConnectionUtil.getConnection();
+    
+            String sql = "SELECT * from message WHERE message_text = ?";
+            PreparedStatement pr = conn.prepareStatement(sql);
+            pr.setString(1, message_text);
+
+            ResultSet rs = pr.executeQuery();
+            
+    
+            while(rs.next()){
+                m.message_id = rs.getInt(1);
+                m.posted_by = rs.getInt(2); 
+                m.message_text = rs.getString(3);
+                m.time_posted_epoch = rs.getLong(4);
+            }
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+
+
+        return m;
+    }
+
 
     @Override
     public Message deleteMessageById(int message_id) {
 
-        Message m = null;
+        Message m = new Message();
 
         Message existingMessage = getMessageById(message_id);
 
@@ -134,11 +163,14 @@ public class DAOImpl implements DAO {
 
     @Override
     public Message updateMessageById(String message_text, int message_id) {
+        
+        Message updatedMessage = new Message();
+        
         if(getMessageById(message_id) != null && message_text != null && !message_text.isEmpty() && message_text.length() <= 255){
             try{
                 Connection conn = ConnectionUtil.getConnection();
         
-                String sql = "UPDATE Message SET message_text = ? WHERE messge_id = ?";
+                String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
                 PreparedStatement pr = conn.prepareStatement(sql);
                 pr.setString(1, message_text);
                 pr.setInt(2, message_id);
@@ -146,8 +178,8 @@ public class DAOImpl implements DAO {
                 int rowsAffected = pr.executeUpdate();
 
                 if(rowsAffected > 0) {
-                   Message result = getMessageById(message_id);
-                   return result;
+                    updatedMessage = getMessageById(message_id);
+                   return updatedMessage;
                 }
                 
             } 
@@ -155,16 +187,19 @@ public class DAOImpl implements DAO {
                 e.printStackTrace();
             }
         }
-        return null;
+        return updatedMessage;
     }
 
 
     @Override
     public Message postNewMessage(Message m) {
+        
+        Message createdMessage = new Message();
+        
         try{
             Connection conn = ConnectionUtil.getConnection();
     
-            String sql = "INSERT INTO Message (message_text, message_id, time_posted_epoch) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO message (message_text, posted_by, time_posted_epoch) VALUES (?,?,?)";
             PreparedStatement pr = conn.prepareStatement(sql);
             pr.setString(1, m.message_text);
             pr.setInt(2, m.posted_by);
@@ -172,21 +207,15 @@ public class DAOImpl implements DAO {
 
             int rowsAffected = pr.executeUpdate();
 
-
             if (rowsAffected > 0) {
-                ResultSet generatedKeys = pr.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int generatedMessageId = generatedKeys.getInt(1);
-                    m.message_id = generatedMessageId;
-                }
-                return m; 
+                createdMessage = getMessageByText(m.message_text);
+                return createdMessage;
             }
             
         } catch(SQLException e){
             e.printStackTrace();
-
         }
-        return null;
+        return createdMessage;
     }
         
     
@@ -212,6 +241,7 @@ public class DAOImpl implements DAO {
                 foundAccount.account_id = rs.getInt(1);
                 foundAccount.username = rs.getString(2);
                 foundAccount.password = rs.getString(3);
+                return foundAccount;
             }
             
         } catch(SQLException e){
