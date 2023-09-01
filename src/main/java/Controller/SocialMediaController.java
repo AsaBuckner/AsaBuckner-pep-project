@@ -74,7 +74,7 @@ public class SocialMediaController {
     private void postMessageHandler(Context context) {
     Message message = context.bodyAsClass(Message.class);
 
-        if (message.message_text.isEmpty() || message.message_text.length() > 255 || DAO.accountExists(message.posted_by) == null) {
+        if (message.message_text.isEmpty() || message.message_text.length() > 254 || DAO.accountExists(message.posted_by) == null) {
             context.status(400).result();
             return;
         }
@@ -143,7 +143,7 @@ public class SocialMediaController {
 
         int id = Integer.parseInt(idStr);
 
-        if (message.message_text.isEmpty() || message.message_text.length() > 255 || DAO.getMessageById(id) == null) {
+        if (message.message_text.isEmpty() || message.message_text.length() > 254 || DAO.getMessageById(id) == null) {
             context.status(400).result();
             return;
         }
